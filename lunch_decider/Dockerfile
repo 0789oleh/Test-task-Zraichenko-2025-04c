@@ -1,24 +1,25 @@
-# syntax=docker/dockerfile:1
-FROM python:3.11-slim
+# Stage 1: Build
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Устанавливаем зависимости системы
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Создаем рабочую директорию
+# Use the official Python runtime image
+FROM python:3.13-slim AS builder 
+ 
+# Create the app directory
+RUN mkdir /app
+ 
+# Set the working directory inside the container
 WORKDIR /app
-
-# Устанавливаем зависимости Python
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Копируем проект
-COPY . .
-
-# Команда запуска по умолчанию (можно переопределить в docker-compose)
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+ 
+# Set environment variables 
+# Prevents Python from writing pyc files to disk
+ENV PYTHONDONTWRITEBYTECODE=1
+#Prevents Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED=1 
+ 
+# Upgrade pip
+RUN pip install --upgrade pip 
+ 
+# Copy the Django project  and install dependencies
+COPY requirements.txt  /app/
+ 
+# run this command to install all dependencies 
+RUN pip install --no-cache-dir -r requirements.txt
