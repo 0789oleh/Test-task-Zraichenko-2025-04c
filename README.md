@@ -12,10 +12,12 @@ Django REST API for internal service which helps.
 
 ## Installtion
 
-Download or clone this repo. Then type cd ./lunch_decider and type
+Download or clone this repo. Navigate to folder
+`cd ./lunch_decider`
 
-docker-compose up --build
-docker-compose run web python manage.py migrate
-docker-compose run web python manage.py createsuperuser
+To build the application type the
+`docker-compose build .`
+`docker-compose run web python manage.py migrate`
+`docker-compose run web python manage.py createsuperuser`
 
 The application will be running at http://localhost:8000
